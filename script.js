@@ -187,10 +187,36 @@ applyTheme(savedTheme);
 themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
 $("#currentYear").textContent = new Date().getFullYear();
 const menuToggle = $("#menuToggle"), nav = $("#mainNav");
-menuToggle.addEventListener("click", () => {
-  const open = nav.classList.toggle("open");
+function setMobileMenu(open, returnFocus = false) {
+  nav.classList.toggle("open", open);
   menuToggle.setAttribute("aria-expanded", String(open));
   menuToggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+  if (open && window.matchMedia("(max-width: 760px)").matches) {
+    nav.querySelector("a")?.focus();
+  } else if (!open && returnFocus) {
+    menuToggle.focus();
+  }
+}
+menuToggle.addEventListener("click", () => {
+  setMobileMenu(!nav.classList.contains("open"));
 });
-nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => { nav.classList.remove("open"); menuToggle.setAttribute("aria-expanded", "false"); }));
+nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => {
+  if (window.matchMedia("(max-width: 760px)").matches) setMobileMenu(false);
+}));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && nav.classList.contains("open") &&
+      window.matchMedia("(max-width: 760px)").matches) {
+    setMobileMenu(false, true);
+  }
+});
+document.addEventListener("click", event => {
+  if (!nav.classList.contains("open") ||
+      !window.matchMedia("(max-width: 760px)").matches) return;
+  if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+    setMobileMenu(false);
+  }
+});
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 760 && nav.classList.contains("open")) setMobileMenu(false);
+});
 renderVehicles(); renderSummary();
