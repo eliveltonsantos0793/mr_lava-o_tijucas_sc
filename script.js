@@ -107,7 +107,8 @@ function comboFor(type, selected) {
   const services = VEHICLE_TYPES[type]?.services || [];
   const validIds = new Set(services.map(service => service.id));
   const key = [...selected].sort().join("|");
-  return (CONFIG.combos[type] || []).find(combo => {
+  const configuredCombos = Array.isArray(CONFIG.combos?.[type]) ? CONFIG.combos[type] : [];
+  return configuredCombos.find(combo => {
     if (!combo || typeof combo.name !== "string" || !combo.name.trim() ||
         !Array.isArray(combo.services) || !combo.services.length ||
         !isValidPrice(combo.price)) return false;
@@ -121,7 +122,8 @@ function calculateVehicle(vehicle) {
   if (!vehicle.selected.length) return { known: true, total: 0, combo: null };
   const combo = comboFor(vehicle.type, vehicle.selected);
   if (combo) return { known: true, total: combo.price, combo };
-  const priceMap = CONFIG.prices[vehicle.type] || {};
+  const configuredPrices = CONFIG.prices?.[vehicle.type];
+  const priceMap = configuredPrices && typeof configuredPrices === "object" ? configuredPrices : {};
   const values = vehicle.selected.map(id => priceMap[id]);
   if (values.every(isValidPrice)) {
     return { known: true, total: values.reduce((sum, value) => sum + value, 0), combo: null };
