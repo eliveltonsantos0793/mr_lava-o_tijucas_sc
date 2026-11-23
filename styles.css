@@ -1741,3 +1741,45 @@ button:focus-visible, a:focus-visible, input:focus-visible, label:focus-within {
   .vehicle-category { padding-inline: 5px; }
   .order-panel { padding: 18px; }
 }
+
+
+/* Etapa C — refinamentos de acessibilidade e estabilidade responsiva */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 3px;
+}
+.menu-toggle,
+.theme-toggle,
+.vehicle-remove,
+.vehicle-category,
+.service-option,
+.button {
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-toggle span { pointer-events: none; }
+.vehicle-remove { min-width: 44px; min-height: 44px; display: inline-grid; place-items: center; }
+.service-option { min-height: 76px; align-items: center; }
+.service-option input { width: 20px; height: 20px; }
+.order-fields input { min-height: 44px; }
+.order-panel, .vehicle-card, .promotion-card, .gallery-tile { min-width: 0; }
+@media (max-width: 760px) {
+  .main-nav { max-height: calc(100dvh - 68px); overflow-y: auto; overscroll-behavior: contain; }
+  .hero-actions .button { flex: 1 1 190px; }
+  .order-panel { width: 100%; }
+  .order-fields { grid-template-columns: minmax(0,1fr); }
+  .order-fields label:nth-of-type(2),
+  .order-fields input:nth-of-type(2) { grid-column: auto; grid-row: auto; }
+  .footer-bottom > * { max-width: 100%; overflow-wrap: anywhere; }
+}
+@media (min-width: 761px) and (max-width: 980px) {
+  .header-inner { gap: 12px; }
+  .brand-copy small { letter-spacing: 1.2px; }
+  .main-nav { gap: clamp(8px,1vw,14px); }
+  .main-nav a { font-size: 9px; }
+  .header-actions { gap: 6px; }
+  .header-actions .button { padding-inline: 10px; font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
