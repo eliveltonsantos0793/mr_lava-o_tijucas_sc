@@ -16,7 +16,7 @@ const VEHICLE_TYPES = {
     label: "Hatch", icon: "🚗", services: [
       { id: "wash", name: "Lavagem completa", desc: "Limpeza externa completa." },
       { id: "interior", name: "Higienização interna", desc: "Limpeza interna detalhada." },
-      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Opção de limpeza interna básica, disponível para todos os clientes." },
       { id: "wax", name: "Enceramento e proteção", desc: "Acabamento e proteção da pintura." }
     ]
   },
@@ -24,7 +24,7 @@ const VEHICLE_TYPES = {
     label: "Sedan", icon: "🚘", services: [
       { id: "wash", name: "Lavagem completa", desc: "Limpeza externa completa." },
       { id: "interior", name: "Higienização interna", desc: "Limpeza interna detalhada." },
-      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Opção de limpeza interna básica, disponível para todos os clientes." },
       { id: "wax", name: "Enceramento e proteção", desc: "Acabamento e proteção da pintura." }
     ]
   },
@@ -32,7 +32,7 @@ const VEHICLE_TYPES = {
     label: "SUV / Picape", icon: "🚙", services: [
       { id: "wash", name: "Lavagem completa", desc: "Limpeza externa completa." },
       { id: "interior", name: "Higienização interna", desc: "Limpeza interna detalhada." },
-      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Opção de limpeza interna básica, disponível para todos os clientes." },
       { id: "wax", name: "Enceramento e proteção", desc: "Acabamento e proteção da pintura." }
     ]
   },
