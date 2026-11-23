@@ -123,8 +123,12 @@ function renderSummary() {
     return `<div class="summary-vehicle"><strong>${type.label} — veículo ${index + 1}</strong><ul>${names.map(name => `<li>${name}</li>`).join("")}</ul><div class="summary-price">${result.combo ? `Combo ${result.combo.name}: ` : ""}${priceText}</div></div>`;
   }).join("");
   $("#orderTotal").textContent = allKnown ? money(total) : "A definir";
-  $("#whatsappButton").disabled = !CONFIG.whatsappNumber || !/^\\d{10,15}$/.test(CONFIG.whatsappNumber);
-  $("#whatsappStatus").textContent = CONFIG.whatsappNumber ? "A solicitação será enviada para o WhatsApp oficial." : "O WhatsApp oficial será configurado próximo à inauguração.";
+  const whatsappIsValid = /^\d{10,15}$/.test(CONFIG.whatsappNumber);
+  $("#whatsappButton").disabled = !whatsappIsValid;
+  $("#whatsappStatus").textContent = whatsappIsValid
+    ? "A solicitação será enviada para o WhatsApp oficial."
+    : "O WhatsApp oficial será configurado próximo à inauguração."; 
+
 }
 function buildMessage() {
   const lines = ["Olá! Gostaria de solicitar um atendimento na MR Lavação.", "", "Meu pedido:"];
@@ -143,7 +147,7 @@ function buildMessage() {
 }
 $("#addVehicle").addEventListener("click", () => { vehicles.push({ id: nextVehicleId++, type: "hatch", selected: [] }); renderVehicles(); renderSummary(); });
 $("#whatsappButton").addEventListener("click", () => {
-  if (!CONFIG.whatsappNumber) return;
+  if (!/^\d{10,15}$/.test(CONFIG.whatsappNumber)) return;
   const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(buildMessage())}`;
   window.open(url, "_blank", "noopener,noreferrer");
 });
