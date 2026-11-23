@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#070a10">
+  <meta name="description"
+    content="MR Lavação — cuidado automotivo em Tijucas, Santa Catarina. Em breve, uma nova experiência em cuidado automotivo.">
+  <title>MR Lavação | Cuidado automotivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="MR Lavação, início">
+        <span class="brand-mark">MR</span>
+        <span class="brand-copy"><strong>MR LAVAÇÃO</strong><small>CUIDADO AUTOMOTIVO</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu"
+        aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav" aria-label="Navegação principal">
+        <a href="#servicos">Serviços</a>
+        <a href="#promocoes">Promoções</a>
+        <a href="#galeria">Galeria</a>
+        <a href="#sobre">A MR</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema"><span class="theme-icon">☼</span><span
+            class="theme-label">Tema claro</span></button>
+        <a class="button button-small button-primary" href="#servicos">Montar pedido <span
+            aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero section" id="inicio">
+      <div class="hero-grid" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> TIJUCAS • SANTA CATARINA</p>
+          <h1>SEU CARRO.<br><span>NOSSO CUIDADO.</span></h1>
+          <p class="hero-lead">Uma nova experiência em cuidado automotivo está chegando. Prepare-se para ver seu veículo
+            com outros olhos.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#servicos">Conheça os serviços <span aria-hidden="true">↗</span></a>
+            <a class="button button-ghost" href="#promocoes">Ver promoções</a>
+          </div>
+          <div class="hero-note"><span class="pulse-dot"></span> Estamos preparando nossa inauguração</div>
+        </div>
+        <div class="hero-art" role="img" aria-label="Ilustração abstrata de um automóvel sob iluminação azul">
+          <div class="art-orbit orbit-one"></div>
+          <div class="art-orbit orbit-two"></div>
+          <div class="art-glow"></div>
+          <div class="car-illustration">
+            <div class="car-roof"></div>
+            <div class="car-window"></div>
+            <div class="car-body"></div>
+            <div class="car-light"></div>
+            <div class="wheel wheel-left"></div>
+            <div class="wheel wheel-right"></div>
+          </div>
+          <div class="art-caption"><span>MR</span><span>PRECISÃO • CUIDADO • PROTEÇÃO</span></div>
+        </div>
+      </div>
+      <div class="hero-bottom container"><span>01 / CUIDADO AUTOMOTIVO</span><span>DESLIZE PARA DESCOBRIR
+          <b>↓</b></span></div>
+    </section>
+
+    <section class="intro-strip">
+      <div class="container intro-strip-inner">
+        <p>MAIS QUE LAVAR. <strong>É CUIDAR DE CADA DETALHE.</strong></p>
+        <span class="strip-symbol">✳</span>
+        <p>UMA NOVA REFERÊNCIA EM <strong>TIJUCAS–SC.</strong></p>
+      </div>
+    </section>
+
+    <section class="section services-section" id="servicos">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> ESCOLHA DO SEU JEITO</p>
+            <h2>MONTE SEU <span>ATENDIMENTO.</span></h2>
+          </div>
+          <p class="section-description">Selecione o veículo e os serviços desejados. Você pode adicionar mais de um
+            veículo ao mesmo pedido.</p>
+        </div>
+        <div class="selection-layout">
+          <div class="vehicle-list" id="vehicleList" aria-live="polite"></div>
+          <aside class="order-panel">
+            <div class="order-panel-top">
+              <div>
+                <p class="eyebrow">SEU PEDIDO</p>
+                <h3>Resumo</h3>
+              </div><span class="order-count" id="orderCount">01</span>
+            </div>
+            <div id="orderSummary" class="order-summary">
+              <p class="empty-state">Selecione os serviços para começar a montar seu pedido.</p>
+            </div>
+            <div class="order-total"><span>Total estimado</span><strong id="orderTotal">A definir</strong></div>
+            <p class="order-disclaimer">Valores e disponibilidade serão confirmados pela equipe. Nenhum agendamento é
+              confirmado automaticamente.</p>
+            <div class="order-fields">
+              <label for="preferredDate">Data pretendida</label><input id="preferredDate" type="date">
+              <label for="preferredTime">Horário pretendido</label><input id="preferredTime" type="time">
+            </div>
+            <button class="button button-primary button-full" id="whatsappButton" disabled>Preparar mensagem no WhatsApp
+              <span aria-hidden="true">↗</span></button>
+            <p class="small-note" id="whatsappStatus">O WhatsApp oficial será configurado próximo à inauguração.</p>
+          </aside>
+        </div>
+        <div class="add-vehicle-wrap"><button class="button button-outline" id="addVehicle">＋ Adicionar outro
+            veículo</button></div>
+        <p class="fine-print">Os valores dos serviços e combos serão publicados após definição comercial da empresa. A
+          identificação de combos será aplicada somente a combinações exatas cadastradas.</p>
+      </div>
+    </section>
+
+    <section class="section promotions-section" id="promocoes">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> CONDIÇÕES ESPECIAIS</p>
+            <h2>PROMOÇÕES QUE <span>VALEM A PENA.</span></h2>
+          </div>
+          <p class="section-description">Combinações pensadas para cuidar do seu veículo. As condições e os valores
+            serão divulgados em breve.</p>
+        </div>
+        <div class="promotion-grid">
+          <article class="promotion-card promo-featured">
+            <div class="promo-number">01</div><span class="promo-tag">COMBOS DA CASA</span>
+            <h3>MAIS CUIDADO.<br><em>UMA SÓ ESCOLHA.</em></h3>
+            <p>Combos prontos com dois ou três serviços, definidos pela MR Lavação para facilitar sua escolha.</p>
+            <a href="#servicos" class="text-link">Ver serviços <span>↗</span></a>
+          </article>
+          <article class="promotion-card">
+            <div class="promo-number">02</div><span class="promo-tag">DO SEU JEITO</span>
+            <h3>MONTE SEU<br><em>COMBO.</em></h3>
+            <p>Escolha dois ou três serviços e consulte uma condição personalizada pelo WhatsApp.</p>
+            <a href="#servicos" class="text-link">Montar pedido <span>↗</span></a>
+          </article>
+          <article class="promotion-card promo-driver">
+            <div class="promo-number">03</div><span class="promo-tag">OFERTA EXCLUSIVA</span>
+            <h3>PARA QUEM VIVE<br><em>NA ESTRADA.</em></h3>
+            <p>Condição especial para motoristas de aplicativos: lavagem do veículo + limpeza interna simples.</p>
+            <span class="promo-footnote">Exclusiva para motoristas de aplicativos. Limpeza simples não equivale à
+              higienização interna completa.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" id="galeria">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> CUIDADO EM CADA DETALHE</p>
+            <h2>UM NOVO PADRÃO <span>DE CUIDADO.</span></h2>
+          </div>
+          <p class="section-description">Em breve, esta galeria receberá registros reais dos serviços realizados pela MR
+            Lavação.</p>
+        </div>
+        <div class="gallery-grid">
+          <div class="gallery-tile gallery-large">
+            <div class="gallery-visual visual-one"><span class="visual-ring"></span></div><span
+              class="gallery-label">CUIDADO EXTERNO <small>IMAGEM ILUSTRATIVA</small></span>
+          </div>
+          <div class="gallery-tile">
+            <div class="gallery-visual visual-two"><span class="visual-shine"></span></div><span
+              class="gallery-label">ACABAMENTO <small>IMAGEM ILUSTRATIVA</small></span>
+          </div>
+          <div class="gallery-tile">
+            <div class="gallery-visual visual-three"><span class="visual-lines"></span></div><span
+              class="gallery-label">PROTEÇÃO <small>IMAGEM ILUSTRATIVA</small></span>
+          </div>
+        </div>
+        <p class="gallery-disclaimer">As imagens desta prévia são elementos visuais ilustrativos, não representam
+          serviços realizados pela empresa.</p>
+      </div>
+    </section>
+
+    <section class="section about-section" id="sobre">
+      <div class="container about-layout">
+        <div class="about-mark"><span>MR</span><i>DETAILING<br>EXPERIENCE</i></div>
+        <div class="about-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> SOBRE A MR LAVAÇÃO</p>
+          <h2>O CUIDADO QUE<br><span>SEU VEÍCULO MERECE.</span></h2>
+          <p>A MR Lavação está preparando uma nova experiência em cuidado automotivo para Tijucas–SC. Nosso propósito é
+            oferecer serviços de limpeza, conservação e proteção com atenção aos detalhes.</p>
+          <p class="about-coming"><span class="pulse-dot"></span> Em preparação para a inauguração.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews-section">
+      <div class="container reviews-layout">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> A EXPERIÊNCIA DE QUEM CONFIA</p>
+          <h2>AVALIAÇÕES <span>REAIS.</span></h2>
+        </div>
+        <div class="reviews-placeholder"><span class="review-stars">★★★★★</span>
+          <h3>Em breve, avaliações reais!</h3>
+          <p>Assim que a MR Lavação iniciar suas atividades e receber avaliações, esta seção será atualizada com
+            opiniões verdadeiras de nossos clientes.</p><small>Não há avaliações publicadas nesta prévia.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="launch-section" id="contato">
+      <div class="container launch-inner">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> EM BREVE EM TIJUCAS–SC</p>
+          <h2>ESTAMOS PREPARANDO<br><span>ALGO ESPECIAL.</span></h2>
+          <p>Uma nova experiência em cuidado automotivo está chegando. Já estamos recebendo solicitações antecipadas,
+            sujeitas à confirmação da inauguração e da disponibilidade.</p>
+        </div>
+        <a class="button button-primary" href="#servicos">Antecipar minha solicitação <span
+            aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <section class="section contact-section">
+      <div class="container contact-layout">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> ONDE ESTAMOS</p>
+          <h2>EM <span>TIJUCAS.</span></h2>
+          <p>Santa Catarina, Brasil<br>CEP 88200-000</p>
+          <p class="contact-pending">Endereço completo e rota serão divulgados após a definição do estabelecimento.</p>
+        </div>
+        <div class="contact-social">
+          <h3>ACOMPANHE A NOVIDADE</h3>
+          <p>Em breve, nossos canais oficiais.</p>
+          <div class="social-pending"><span>Instagram</span><span>Facebook</span><span>TikTok</span><span>WhatsApp
+              Business</span></div><small>Perfis e links oficiais serão adicionados antes da publicação.</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <a class="brand footer-brand" href="#inicio"><span class="brand-mark">MR</span><span class="brand-copy"><strong>MR
+            LAVAÇÃO</strong><small>CUIDADO AUTOMOTIVO</small></span></a>
+      <p>Cuidado automotivo com atenção<br>a cada detalhe.</p>
+      <a class="footer-top" href="#inicio">VOLTAR AO TOPO ↑</a>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="currentYear"></span> MR Lavação. Todos os direitos reservados.</span>
+      <a href="https://www.eliveltonsantos.com.br" target="_blank" rel="noopener noreferrer">Desenvolvido por <strong>ES
+          Tecnologia</strong> ↗</a>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+
+</html>
