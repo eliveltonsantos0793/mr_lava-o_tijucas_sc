@@ -45,9 +45,53 @@ const VEHICLE_TYPES = {
   }
 };
 
+const MAX_VEHICLES = 5;
+const ORDER_STORAGE_KEY = "mr-lavacao-order-v1";
+const $ = (selector, root = document) => root.querySelector(selector);
 let vehicles = [{ id: 1, type: "hatch", selected: [] }];
 let nextVehicleId = 2;
-const $ = (selector, root = document) => root.querySelector(selector);
+let savedOrder = null;
+try {
+  savedOrder = JSON.parse(sessionStorage.getItem(ORDER_STORAGE_KEY) || "null");
+} catch (error) {
+  savedOrder = null;
+}
+
+};
+
+if (savedOrder && Array.isArray(savedOrder.vehicles)) {
+  const restored = savedOrder.vehicles.slice(0, MAX_VEHICLES).map((item, index) => {
+    const type = VEHICLE_TYPES[item?.type] ? item.type : "hatch";
+    const validIds = new Set(VEHICLE_TYPES[type].services.map(service => service.id));
+    const selected = Array.isArray(item?.selected)
+      ? [...new Set(item.selected.filter(id => validIds.has(id)))]
+      : [];
+    const id = Number.isSafeInteger(item?.id) && item.id > 0 ? item.id : index + 1;
+    return { id, type, selected };
+  });
+  if (restored.length) {
+    const uniqueIds = new Set();
+    vehicles = restored.filter(item => {
+      if (uniqueIds.has(item.id)) return false;
+      uniqueIds.add(item.id);
+      return true;
+    });
+    if (!vehicles.length) vehicles = [{ id: 1, type: "hatch", selected: [] }];
+    nextVehicleId = Math.max(...vehicles.map(item => item.id)) + 1;
+  }
+}
+
+function persistOrderState() {
+  try {
+    sessionStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify({
+      vehicles,
+      preferredDate: $("#preferredDate")?.value || "",
+      preferredTime: $("#preferredTime")?.value || ""
+    }));
+  } catch (error) {
+    // O pedido continua funcionando mesmo se o navegador bloquear o armazenamento.
+  }
+}
 
 // Escapa valores dinâmicos antes de inseri-los em templates HTML.
 function escapeHTML(value) {
@@ -57,18 +101,42 @@ function escapeHTML(value) {
 }
 const money = value => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
+function isValidPrice(value) {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0;
+}
 function comboFor(type, selected) {
+  const services = VEHICLE_TYPES[type]?.services || [];
+  const validIds = new Set(services.map(service => service.id));
   const key = [...selected].sort().join("|");
-  return (CONFIG.combos[type] || []).find(combo => [...combo.services].sort().join("|") === key) || null;
+  return (CONFIG.combos[type] || []).find(combo => {
+    if (!combo || typeof combo.name !== "string" || !combo.name.trim() ||
+        !Array.isArray(combo.services) || !combo.services.length ||
+        !isValidPrice(combo.price)) return false;
+    const uniqueServices = [...new Set(combo.services)];
+    if (uniqueServices.length !== combo.services.length ||
+        uniqueServices.some(id => !validIds.has(id))) return false;
+    return [...uniqueServices].sort().join("|") === key;
+  }) || null;
 }
 function calculateVehicle(vehicle) {
   if (!vehicle.selected.length) return { known: true, total: 0, combo: null };
   const combo = comboFor(vehicle.type, vehicle.selected);
+  if (combo) return { known: true, total: combo.price, combo };
   const priceMap = CONFIG.prices[vehicle.type] || {};
-  if (combo && Number.isFinite(combo.price)) return { known: true, total: combo.price, combo };
   const values = vehicle.selected.map(id => priceMap[id]);
-  if (values.every(value => Number.isFinite(value))) return { known: true, total: values.reduce((a, b) => a + b, 0), combo: null };
+  if (values.every(isValidPrice)) {
+    return { known: true, total: values.reduce((sum, value) => sum + value, 0), combo: null };
+  }
   return { known: false, total: null, combo: null };
+}
+function updateVehicleLimit() {
+  const addButton = $("#addVehicle");
+  const limitStatus = $("#vehicleLimitStatus");
+  const atLimit = vehicles.length >= MAX_VEHICLES;
+  addButton.disabled = atLimit;
+  limitStatus.textContent = atLimit
+    ? `Limite de ${MAX_VEHICLES} veículos por pedido atingido.`
+    : `Você pode incluir até ${MAX_VEHICLES} veículos no mesmo pedido.`;
 }
 function renderVehicles(focusSelector = null) {
   const root = $("#vehicleList");
@@ -130,6 +198,8 @@ function renderVehicles(focusSelector = null) {
   if (focusSelector) root.querySelector(focusSelector)?.focus();
 }
 function renderSummary() {
+  persistOrderState();
+  updateVehicleLimit();
   const chosen = vehicles.filter(vehicle => vehicle.selected.length);
   $("#orderCount").textContent = String(vehicles.length).padStart(2, "0");
   if (!chosen.length) {
@@ -161,6 +231,15 @@ function localDateValue(date = new Date()) {
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+if (savedOrder && typeof savedOrder.preferredDate === "string" &&
+    /^\\d{4}-\\d{2}-\\d{2}$/.test(savedOrder.preferredDate) &&
+    savedOrder.preferredDate >= localDateValue()) {
+  preferredDateInput.value = savedOrder.preferredDate;
+}
+if (savedOrder && typeof savedOrder.preferredTime === "string" &&
+    /^\\d{2}:\\d{2}$/.test(savedOrder.preferredTime)) {
+  $("#preferredTime").value = savedOrder.preferredTime;
+}
 function refreshPreferredDateMinimum() {
   preferredDateInput.min = localDateValue();
   if (preferredDateInput.value && preferredDateInput.value < preferredDateInput.min) {
@@ -174,6 +253,8 @@ function refreshPreferredDateMinimum() {
 preferredDateInput.addEventListener("focus", refreshPreferredDateMinimum);
 preferredDateInput.addEventListener("change", refreshPreferredDateMinimum);
 refreshPreferredDateMinimum();
+preferredDateInput.addEventListener("change", persistOrderState);
+$("#preferredTime").addEventListener("change", persistOrderState);
 
 function buildMessage() {
   const lines = ["Olá! Gostaria de solicitar um atendimento na MR Lavação.", "", "Meu pedido:"];
@@ -203,6 +284,10 @@ document.querySelectorAll("[data-promo='uber']").forEach(button => button.addEve
   $("#servicos").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }));
 $("#addVehicle").addEventListener("click", () => {
+  if (vehicles.length >= MAX_VEHICLES) {
+    updateVehicleLimit();
+    return;
+  }
   const vehicle = { id: nextVehicleId++, type: "hatch", selected: [] };
   vehicles.push(vehicle);
   renderVehicles(`[data-type="${vehicle.id}"][data-category="${vehicle.type}"]`);
