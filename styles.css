@@ -1057,6 +1057,17 @@ input {
     z-index: 1
 }
 
+.about-logo-image {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 86%;
+    max-height: 270px;
+    object-fit: contain;
+}
+
 .about-mark i {
     position: absolute;
     bottom: 28px;
