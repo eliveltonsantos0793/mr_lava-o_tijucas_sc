@@ -61,3 +61,7 @@ A data e o horário são preferências informadas pelo cliente, não confirmaç�
 - Imagem principal priorizada no carregamento; logo secundária carregada sob demanda.
 - Folha de estilos respeita `prefers-reduced-motion`.
 - As URLs canônicas e do sitemap devem ser atualizadas caso o domínio de publicação mude.
+
+
+## Testes finais — Etapa 4
+Consulte [TEST_REPORT.md](TEST_REPORT.md) para os resultados da auditoria estática e dos testes das regras comerciais, bem como os limites e validações manuais ainda recomendadas.
