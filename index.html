@@ -95,10 +95,10 @@
                 <h3>Resumo</h3>
               </div><span class="order-count" id="orderCount">01</span>
             </div>
-            <div id="orderSummary" class="order-summary">
+            <div id="orderSummary" class="order-summary" role="status" aria-live="polite" aria-atomic="true">
               <p class="empty-state">Selecione os serviços para começar a montar seu pedido.</p>
             </div>
-            <div class="order-total"><span>Total estimado</span><strong id="orderTotal">A definir</strong></div>
+            <div class="order-total"><span>Total estimado</span><strong id="orderTotal" aria-live="polite" aria-atomic="true">A definir</strong></div>
             <p class="order-disclaimer">Valores e disponibilidade serão confirmados pela equipe. Nenhum agendamento é
               confirmado automaticamente.</p>
             <div class="order-fields">
@@ -111,7 +111,7 @@
           </aside>
         </div>
         <div class="add-vehicle-wrap"><button class="button button-outline" id="addVehicle">＋ Adicionar outro
-            veículo</button></div>
+            veículo</button><p class="vehicle-limit-status" id="vehicleLimitStatus" role="status" aria-live="polite">Você pode incluir até 5 veículos no mesmo pedido.</p></div>
         <p class="fine-print">Os valores dos serviços e combos serão publicados após definição comercial da empresa. A
           identificação de combos será aplicada somente a combinações exatas cadastradas.</p>
       </div>
