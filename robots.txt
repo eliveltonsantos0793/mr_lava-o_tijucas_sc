@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eliveltonsantos0793.github.io/mr_lava-o_tijucas_sc/sitemap.xml
