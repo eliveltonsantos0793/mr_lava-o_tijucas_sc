@@ -128,7 +128,7 @@ function renderSummary() {
   $("#whatsappStatus").textContent = whatsappIsValid
     ? "A solicitação será enviada para o WhatsApp oficial."
     : "O WhatsApp oficial será configurado próximo à inauguração."; 
-  $("#whatsappStatus").textContent = CONFIG.whatsappNumber ? "A solicitação será enviada para o WhatsApp oficial." : "O WhatsApp oficial será configurado próximo à inauguração.";
+
 }
 function buildMessage() {
   const lines = ["Olá! Gostaria de solicitar um atendimento na MR Lavação.", "", "Meu pedido:"];
