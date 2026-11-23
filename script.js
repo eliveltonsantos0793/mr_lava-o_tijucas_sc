@@ -48,6 +48,13 @@ const VEHICLE_TYPES = {
 let vehicles = [{ id: 1, type: "hatch", selected: [] }];
 let nextVehicleId = 2;
 const $ = (selector, root = document) => root.querySelector(selector);
+
+// Escapa valores dinâmicos antes de inseri-los em templates HTML.
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[char]);
+}
 const money = value => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
 
 function comboFor(type, selected) {
@@ -72,18 +79,18 @@ function renderVehicles() {
       <button type="button" class="vehicle-category ${vehicle.type === key ? "is-selected" : ""}"
         data-type="${vehicle.id}" data-category="${key}" aria-pressed="${vehicle.type === key}">
         <span class="category-icon" aria-hidden="true">${item.icon}</span>
-        <span class="category-name">${item.label}</span>
+        <span class="category-name">${escapeHTML(item.label)}</span>
         <span class="category-check" aria-hidden="true">${vehicle.type === key ? "✓" : "+"}</span>
       </button>`).join("");
     const serviceCards = type.services.map(service => `
       <label class="service-option">
         <input type="checkbox" data-vehicle="${vehicle.id}" data-service="${service.id}" ${vehicle.selected.includes(service.id) ? "checked" : ""}>
-        <span><strong>${service.name}</strong><small>${service.desc}</small></span>
+        <span><strong>${escapeHTML(service.name)}</strong><small>${escapeHTML(service.desc)}</small></span>
       </label>`).join("");
     let priceNote = "Selecione serviços para consultar a combinação.";
     if (vehicle.selected.length) {
       priceNote = result.known
-        ? (result.combo ? `Combo identificado: ${result.combo.name}` : "Valores individuais cadastrados.")
+        ? (result.combo ? `Combo identificado: ${escapeHTML(result.combo.name)}` : "Valores individuais cadastrados.")
         : "Preços aguardando definição pela empresa.";
     }
     return `<article class="vehicle-card" data-card="${vehicle.id}">
@@ -131,7 +138,7 @@ function renderSummary() {
     if (!result.known) allKnown = false; else total += result.total;
     const names = vehicle.selected.map(id => type.services.find(service => service.id === id)?.name || id);
     const priceText = result.known ? money(result.total) : "Preço a definir";
-    return `<div class="summary-vehicle"><strong>${type.label} — veículo ${index + 1}</strong><ul>${names.map(name => `<li>${name}</li>`).join("")}</ul><div class="summary-price">${result.combo ? `Combo ${result.combo.name}: ` : ""}${priceText}</div></div>`;
+    return `<div class="summary-vehicle"><strong>${escapeHTML(type.label)} — veículo ${index + 1}</strong><ul>${names.map(name => `<li>${escapeHTML(name)}</li>`).join("")}</ul><div class="summary-price">${result.combo ? `Combo ${result.combo.name}: ` : ""}${priceText}</div></div>`;
   }).join("");
   $("#orderTotal").textContent = allKnown ? money(total) : "A definir";
   const whatsappIsValid = /^\d{10,15}$/.test(CONFIG.whatsappNumber);
