@@ -57,7 +57,6 @@ try {
   savedOrder = null;
 }
 
-};
 
 if (savedOrder && Array.isArray(savedOrder.vehicles)) {
   const restored = savedOrder.vehicles.slice(0, MAX_VEHICLES).map((item, index) => {
