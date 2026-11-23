@@ -187,10 +187,20 @@ applyTheme(savedTheme);
 themeToggle.addEventListener("click", () => applyTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
 $("#currentYear").textContent = new Date().getFullYear();
 const menuToggle = $("#menuToggle"), nav = $("#mainNav");
-menuToggle.addEventListener("click", () => {
-  const open = nav.classList.toggle("open");
+function setMobileMenu(open) {
+  nav.classList.toggle("open", open);
   menuToggle.setAttribute("aria-expanded", String(open));
   menuToggle.setAttribute("aria-label", open ? "Fechar menu" : "Abrir menu");
+}
+menuToggle.addEventListener("click", () => setMobileMenu(!nav.classList.contains("open")));
+nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setMobileMenu(false)));
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && nav.classList.contains("open")) {
+    setMobileMenu(false);
+    menuToggle.focus();
+  }
 });
-nav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => { nav.classList.remove("open"); menuToggle.setAttribute("aria-expanded", "false"); }));
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 760 && nav.classList.contains("open")) setMobileMenu(false);
+});
 renderVehicles(); renderSummary();
