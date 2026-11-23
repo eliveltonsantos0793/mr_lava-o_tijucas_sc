@@ -18,8 +18,8 @@ No início de `script.js`, preencher:
 - `CONFIG.prices`: preços individuais por categoria e serviço.
 - `CONFIG.combos`: combos exatos cadastrados por categoria, com nome, lista de IDs dos serviços e preço.
 
-IDs dos serviços:
-- Hatch/Sedan/SUV: `wash`, `interior`, `wax`
+IDs dos serviços (incluindo limpeza interna simples, disponível para todos os clientes):
+- Hatch/Sedan/SUV: `wash`, `interior`, `interior-simple`, `wax`
 - Motocicleta: `moto-wash`, `moto-detail`, `moto-wax`
 
 Exemplo de combo (não é preço real; apenas formato de configuração):
