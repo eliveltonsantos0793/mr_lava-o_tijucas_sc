@@ -70,7 +70,7 @@ function calculateVehicle(vehicle) {
   if (values.every(value => Number.isFinite(value))) return { known: true, total: values.reduce((a, b) => a + b, 0), combo: null };
   return { known: false, total: null, combo: null };
 }
-function renderVehicles() {
+function renderVehicles(focusSelector = null) {
   const root = $("#vehicleList");
   root.innerHTML = vehicles.map((vehicle, index) => {
     const type = VEHICLE_TYPES[vehicle.type];
@@ -109,19 +109,25 @@ function renderVehicles() {
     if (!vehicle) return;
     const service = event.target.dataset.service;
     vehicle.selected = event.target.checked ? [...vehicle.selected, service] : vehicle.selected.filter(id => id !== service);
-    renderVehicles(); renderSummary();
+    renderVehicles(`input[data-vehicle="${vehicle.id}"][data-service="${service}"]`); renderSummary();
   }));
   root.querySelectorAll("[data-type][data-category]").forEach(button => button.addEventListener("click", () => {
     const vehicle = vehicles.find(item => item.id === Number(button.dataset.type));
     if (!vehicle || vehicle.type === button.dataset.category) return;
     vehicle.type = button.dataset.category;
     vehicle.selected = [];
-    renderVehicles(); renderSummary();
+    renderVehicles(`[data-type="${vehicle.id}"][data-category="${vehicle.type}"]`); renderSummary();
   }));
   root.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => {
     vehicles = vehicles.filter(item => item.id !== Number(button.dataset.remove));
-    renderVehicles(); renderSummary();
+    const nextVehicle = vehicles.find(item => item.id > Number(button.dataset.remove)) || vehicles[vehicles.length - 1];
+    renderVehicles(nextVehicle
+      ? `[data-type="${nextVehicle.id}"][data-category="${nextVehicle.type}"]`
+      : null);
+    renderSummary();
+    if (!nextVehicle) $("#addVehicle").focus();
   }));
+  if (focusSelector) root.querySelector(focusSelector)?.focus();
 }
 function renderSummary() {
   const chosen = vehicles.filter(vehicle => vehicle.selected.length);
@@ -148,10 +154,31 @@ function renderSummary() {
     : "O WhatsApp oficial será configurado próximo à inauguração."; 
 
 }
+const preferredDateInput = $("#preferredDate");
+function localDateValue(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+function refreshPreferredDateMinimum() {
+  preferredDateInput.min = localDateValue();
+  if (preferredDateInput.value && preferredDateInput.value < preferredDateInput.min) {
+    preferredDateInput.value = "";
+    preferredDateInput.setCustomValidity("Escolha hoje ou uma data futura.");
+    preferredDateInput.reportValidity();
+  } else {
+    preferredDateInput.setCustomValidity("");
+  }
+}
+preferredDateInput.addEventListener("focus", refreshPreferredDateMinimum);
+preferredDateInput.addEventListener("change", refreshPreferredDateMinimum);
+refreshPreferredDateMinimum();
+
 function buildMessage() {
   const lines = ["Olá! Gostaria de solicitar um atendimento na MR Lavação.", "", "Meu pedido:"];
-  vehicles.forEach((vehicle, index) => {
-    if (!vehicle.selected.length) return;
+  const chosenVehicles = vehicles.filter(vehicle => vehicle.selected.length);
+  chosenVehicles.forEach((vehicle, index) => {
     const type = VEHICLE_TYPES[vehicle.type], result = calculateVehicle(vehicle);
     lines.push("", `Veículo ${index + 1}: ${type.label}`);
     vehicle.selected.forEach(id => lines.push(`- ${type.services.find(service => service.id === id)?.name || id}`));
@@ -172,10 +199,18 @@ document.querySelectorAll("[data-promo='uber']").forEach(button => button.addEve
   vehicle.selected = ["wash", "interior-simple"];
   $("#promoFeedback").textContent = "Oferta selecionada no veículo " + (vehicles.indexOf(vehicle) + 1) + ". Confira o resumo do pedido.";
   renderVehicles(); renderSummary();
-  $("#servicos").scrollIntoView({ behavior: "smooth", block: "start" });
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  $("#servicos").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
 }));
-$("#addVehicle").addEventListener("click", () => { vehicles.push({ id: nextVehicleId++, type: "hatch", selected: [] }); renderVehicles(); renderSummary(); });
+$("#addVehicle").addEventListener("click", () => {
+  const vehicle = { id: nextVehicleId++, type: "hatch", selected: [] };
+  vehicles.push(vehicle);
+  renderVehicles(`[data-type="${vehicle.id}"][data-category="${vehicle.type}"]`);
+  renderSummary();
+});
 $("#whatsappButton").addEventListener("click", () => {
+  refreshPreferredDateMinimum();
+  if (!preferredDateInput.checkValidity()) { preferredDateInput.reportValidity(); return; }
   if (!/^\d{10,15}$/.test(CONFIG.whatsappNumber)) return;
   const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(buildMessage())}`;
   window.open(url, "_blank", "noopener,noreferrer");
