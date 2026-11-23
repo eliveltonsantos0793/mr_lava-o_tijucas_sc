@@ -233,12 +233,12 @@ function localDateValue(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 if (savedOrder && typeof savedOrder.preferredDate === "string" &&
-    /^\\d{4}-\\d{2}-\\d{2}$/.test(savedOrder.preferredDate) &&
+    /^\d{4}-\d{2}-\d{2}$/.test(savedOrder.preferredDate) &&
     savedOrder.preferredDate >= localDateValue()) {
   preferredDateInput.value = savedOrder.preferredDate;
 }
 if (savedOrder && typeof savedOrder.preferredTime === "string" &&
-    /^\\d{2}:\\d{2}$/.test(savedOrder.preferredTime)) {
+    /^\d{2}:\d{2}$/.test(savedOrder.preferredTime)) {
   $("#preferredTime").value = savedOrder.preferredTime;
 }
 function refreshPreferredDateMinimum() {
