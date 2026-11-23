@@ -138,7 +138,7 @@ function renderSummary() {
     if (!result.known) allKnown = false; else total += result.total;
     const names = vehicle.selected.map(id => type.services.find(service => service.id === id)?.name || id);
     const priceText = result.known ? money(result.total) : "Preço a definir";
-    return `<div class="summary-vehicle"><strong>${escapeHTML(type.label)} — veículo ${index + 1}</strong><ul>${names.map(name => `<li>${escapeHTML(name)}</li>`).join("")}</ul><div class="summary-price">${result.combo ? `Combo ${result.combo.name}: ` : ""}${priceText}</div></div>`;
+    return `<div class="summary-vehicle"><strong>${escapeHTML(type.label)} — veículo ${index + 1}</strong><ul>${names.map(name => `<li>${escapeHTML(name)}</li>`).join("")}</ul><div class="summary-price">${result.combo ? `Combo ${escapeHTML(result.combo.name)}: ` : ""}${priceText}</div></div>`;
   }).join("");
   $("#orderTotal").textContent = allKnown ? money(total) : "A definir";
   const whatsappIsValid = /^\d{10,15}$/.test(CONFIG.whatsappNumber);
