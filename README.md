@@ -38,3 +38,15 @@ Substitua `0` por preço aprovado antes de publicar. Não deixe dados demonstrat
 - As imagens da galeria são ilustrações CSS e estão identificadas como ilustrativas.
 - Não há painel administrativo, banco de dados ou pagamento online nesta fase.
 - Esta versão é uma prévia de desenvolvimento e não deve ser publicada sem revisão e autorização do proprietário.
+
+
+## Robustez do pedido — Etapa 2
+- Limite de até 5 veículos por pedido; o controle de inclusão é desabilitado ao atingir o limite.
+- Preços individuais e de combos só são considerados válidos quando são números finitos e não negativos.
+- Combos só são aplicados quando têm nome, preço válido e uma combinação exata de serviços existentes, sem IDs repetidos.
+- Se um combo estiver inválido, ele é ignorado; o cálculo tenta usar os preços individuais válidos. Se não houver preços válidos para todos os serviços, o total permanece "A definir".
+- O pedido é salvo temporariamente no `sessionStorage` da aba do navegador, incluindo veículos, serviços, data e horário pretendidos. O armazenamento não é um banco de dados e pode não estar disponível em navegação privada ou em configurações restritivas.
+- O resumo e o total anunciam atualizações para tecnologias assistivas.
+- O limite de veículos pode ser ajustado pela constante `MAX_VEHICLES` no início de `script.js`.
+
+A data e o horário são preferências informadas pelo cliente, não confirmação de agendamento. O pedido continua dependendo da confirmação da equipe.
