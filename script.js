@@ -16,6 +16,9 @@ const VEHICLE_TYPES = {
     label: "Hatch", icon: "🚗", services: [
       { id: "wash", name: "Lavagem completa", desc: "Limpeza externa completa." },
       { id: "interior", name: "Higienização interna", desc: "Limpeza interna detalhada." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
+      { id: "interior-simple", name: "Limpeza interna simples", desc: "Limpeza interna básica para a oferta Uber." },
       { id: "wax", name: "Enceramento e proteção", desc: "Acabamento e proteção da pintura." }
     ]
   },
@@ -65,7 +68,13 @@ function renderVehicles() {
   root.innerHTML = vehicles.map((vehicle, index) => {
     const type = VEHICLE_TYPES[vehicle.type];
     const result = calculateVehicle(vehicle);
-    const options = Object.entries(VEHICLE_TYPES).map(([key, item]) => `<option value="${key}" ${vehicle.type === key ? "selected" : ""}>${item.label}</option>`).join("");
+    const categoryCards = Object.entries(VEHICLE_TYPES).map(([key, item]) => `
+      <button type="button" class="vehicle-category ${vehicle.type === key ? "is-selected" : ""}"
+        data-type="${vehicle.id}" data-category="${key}" aria-pressed="${vehicle.type === key}">
+        <span class="category-icon" aria-hidden="true">${item.icon}</span>
+        <span class="category-name">${item.label}</span>
+        <span class="category-check" aria-hidden="true">${vehicle.type === key ? "✓" : "+"}</span>
+      </button>`).join("");
     const serviceCards = type.services.map(service => `
       <label class="service-option">
         <input type="checkbox" data-vehicle="${vehicle.id}" data-service="${service.id}" ${vehicle.selected.includes(service.id) ? "checked" : ""}>
@@ -79,15 +88,13 @@ function renderVehicles() {
     }
     return `<article class="vehicle-card" data-card="${vehicle.id}">
       <div class="vehicle-card-head">
-        <div class="vehicle-title"><span class="vehicle-symbol">${type.icon}</span><div><h3>${type.label}</h3><p>VEÍCULO ${String(index + 1).padStart(2, "0")}</p></div></div>
-        <div style="display:flex;align-items:center;gap:12px">
-          <label class="sr-only" for="type-${vehicle.id}">Categoria do veículo ${index + 1}</label>
-          <select id="type-${vehicle.id}" class="vehicle-type" data-type="${vehicle.id}" aria-label="Categoria do veículo ${index + 1}">${options}</select>
-          ${vehicles.length > 1 ? `<button class="vehicle-remove" data-remove="${vehicle.id}" aria-label="Remover veículo ${index + 1}">×</button>` : ""}
-        </div>
+        <div class="vehicle-title"><span class="vehicle-symbol">${type.icon}</span><div><h3>Veículo ${String(index + 1).padStart(2, "0")}</h3><p>ESCOLHA A CATEGORIA</p></div></div>
+        ${vehicles.length > 1 ? `<button class="vehicle-remove" data-remove="${vehicle.id}" aria-label="Remover veículo ${index + 1}">×</button>` : ""}
       </div>
+      <div class="vehicle-category-grid" role="group" aria-label="Categoria do veículo ${index + 1}">${categoryCards}</div>
+      <div class="service-heading"><h4>Serviços disponíveis</h4><span>Selecione um ou mais</span></div>
       <div class="service-grid">${serviceCards}</div>
-      <p class="vehicle-combo-note">${priceNote}</p>
+      <p class="vehicle-combo-note" aria-live="polite">${priceNote}</p>
     </article>`;
   }).join("");
   root.querySelectorAll("[data-vehicle][data-service]").forEach(input => input.addEventListener("change", event => {
@@ -97,12 +104,16 @@ function renderVehicles() {
     vehicle.selected = event.target.checked ? [...vehicle.selected, service] : vehicle.selected.filter(id => id !== service);
     renderVehicles(); renderSummary();
   }));
-  root.querySelectorAll("[data-type]").forEach(select => select.addEventListener("change", event => {
-    const vehicle = vehicles.find(item => item.id === Number(event.target.dataset.type));
-    if (vehicle) { vehicle.type = event.target.value; vehicle.selected = []; renderVehicles(); renderSummary(); }
+  root.querySelectorAll("[data-type][data-category]").forEach(button => button.addEventListener("click", () => {
+    const vehicle = vehicles.find(item => item.id === Number(button.dataset.type));
+    if (!vehicle || vehicle.type === button.dataset.category) return;
+    vehicle.type = button.dataset.category;
+    vehicle.selected = [];
+    renderVehicles(); renderSummary();
   }));
   root.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => {
-    vehicles = vehicles.filter(item => item.id !== Number(button.dataset.remove)); renderVehicles(); renderSummary();
+    vehicles = vehicles.filter(item => item.id !== Number(button.dataset.remove));
+    renderVehicles(); renderSummary();
   }));
 }
 function renderSummary() {
@@ -145,6 +156,17 @@ function buildMessage() {
   lines.push("", "Gostaria de confirmar disponibilidade e condições. Obrigado(a)!");
   return lines.join("\n");
 }
+document.querySelectorAll("[data-promo='uber']").forEach(button => button.addEventListener("click", () => {
+  const vehicle = vehicles.find(item => item.type !== "motorcycle") || vehicles[0];
+  if (!vehicle || vehicle.type === "motorcycle") {
+    $("#promoFeedback").textContent = "A oferta Uber está disponível para veículos de passeio.";
+    return;
+  }
+  vehicle.selected = ["wash", "interior-simple"];
+  $("#promoFeedback").textContent = "Oferta selecionada no veículo " + (vehicles.indexOf(vehicle) + 1) + ". Confira o resumo do pedido.";
+  renderVehicles(); renderSummary();
+  $("#servicos").scrollIntoView({ behavior: "smooth", block: "start" });
+}));
 $("#addVehicle").addEventListener("click", () => { vehicles.push({ id: nextVehicleId++, type: "hatch", selected: [] }); renderVehicles(); renderSummary(); });
 $("#whatsappButton").addEventListener("click", () => {
   if (!/^\d{10,15}$/.test(CONFIG.whatsappNumber)) return;
