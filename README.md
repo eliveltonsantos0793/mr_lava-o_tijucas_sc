@@ -50,3 +50,14 @@ Substitua `0` por preço aprovado antes de publicar. Não deixe dados demonstrat
 - O limite de veículos pode ser ajustado pela constante `MAX_VEHICLES` no início de `script.js`.
 
 A data e o horário são preferências informadas pelo cliente, não confirmação de agendamento. O pedido continua dependendo da confirmação da equipe.
+
+
+## SEO e desempenho — Etapa 3
+- Metadados de título, descrição e indexação em português do Brasil.
+- URL canônica e metadados Open Graph/Twitter para compartilhamento.
+- Dados estruturados Schema.org do tipo `CarWash`, limitados às informações confirmadas (Tijucas–SC; sem endereço, telefone ou horário inventados).
+- Sitemap XML e robots.txt apontando para a URL pública atual do GitHub Pages.
+- Favicon SVG próprio, sem dependência de serviço externo.
+- Imagem principal priorizada no carregamento; logo secundária carregada sob demanda.
+- Folha de estilos respeita `prefers-reduced-motion`.
+- As URLs canônicas e do sitemap devem ser atualizadas caso o domínio de publicação mude.
